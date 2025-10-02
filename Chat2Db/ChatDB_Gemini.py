@@ -85,7 +85,7 @@ def clean_sql_query(sql_query, schema_info):
     sql_query = " ".join(sql_query.split())
 
     if not sql_query.lower().startswith("select"):
-        raise ValueError("❌ Only SELECT queries are allowed.")
+        raise ValueError("Only SELECT queries are allowed.")
 
     if sql_query.endswith(";"):
         sql_query = sql_query[:-1]
@@ -95,7 +95,7 @@ def clean_sql_query(sql_query, schema_info):
         if "." in word:
             col = word.split(".")[-1]
             if col not in all_columns:
-                st.warning(f"⚠️ Column not in schema: {col}")
+                st.warning(f"Column not in schema: {col}")
 
     return sql_query
 
@@ -117,7 +117,7 @@ user_question = st.text_area("Enter your question:", placeholder="e.g. List prod
 
 if st.button("Generate & Run SQL"):
     if not user_question.strip():
-        st.error("❌ Please enter a question.")
+        st.error("Please enter a question.")
     else:
         try:
             sql = get_sql_from_gemini(user_question, schema_text)
@@ -125,12 +125,12 @@ if st.button("Generate & Run SQL"):
             st.code(sql, language="sql")
 
             sql = clean_sql_query(sql, schema_info)
-            st.subheader("✅ Cleaned SQL")
+            st.subheader("Cleaned SQL")
             st.code(sql, language="sql")
 
             result_df = execute_sql(sql)
-            st.subheader("📊 Query Result")
+            st.subheader("Query Result")
             st.dataframe(result_df, use_container_width=True)
 
         except Exception as e:
-            st.error(f"❌ Error: {e}")
+            st.error(f"Error: {e}")
